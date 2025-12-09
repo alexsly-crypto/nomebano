@@ -14,32 +14,50 @@
   <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-  <script>
-    function initMap() {
-      const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.6037, lng: -58.3816 },
-        zoom: 10
+<script>
+  function initMap() {
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -34.6037, lng: -58.3816 },
+      zoom: 10
+    });
+
+    const puntos = [
+      { lat: -34.60, lng: -58.38, image: 'https://ejemplo.com/imagen1.jpg' }
+    ];
+
+    puntos.forEach(punto => {
+      const marker = new google.maps.Marker({
+        position: { lat: punto.lat, lng: punto.lng },
+        map: map
       });
 
-      const puntos = [
-        { lat: -34.60, lng: -58.38, image: 'https://ejemplo.com/imagen1.jpg' }
-      ];
-
-      puntos.forEach(punto => {
-        const marker = new google.maps.Marker({
-          position: { lat: punto.lat, lng: punto.lng },
-          map: map
+      if (punto.image) {
+        const infowindow = new google.maps.InfoWindow({
+          content: `<img src="${punto.image}" style="width:150px;">`
         });
+        marker.addListener('click', () => infowindow.open(map, marker));
+      }
+    });
+  }
 
-        if (punto.image) {
-          const infowindow = new google.maps.InfoWindow({
-            content: `<img src="${punto.image}" style="width:150px;">`
-          });
-          marker.addListener('click', () => infowindow.open(map, marker));
-        }
-      });
+  // NUEVO: manejar envío del formulario
+  function handleSubmit(event) {
+    event.preventDefault(); // evitamos envío automático
+
+    const response = grecaptcha.getResponse();
+
+    if (!response) {
+      alert("Por favor completá el reCAPTCHA antes de enviar.");
+      return;
     }
-  </script>
+
+    // Acá, para demo, solo mostramos un mensaje
+    alert("reCAPTCHA completado. (OJO: solo validado en el navegador)");
+
+    // Si quisieras enviar el form de verdad:
+    // event.target.submit();
+  }
+</script>
 </head>
 
 <body>
@@ -47,10 +65,10 @@
   <div id="map" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
 
   <h2>Formulario protegido con reCAPTCHA</h2>
-  <form action="#" method="POST">
-    <div class="g-recaptcha" data-sitekey=6LdCHCYsAAAAACuKyFDohsOr06WlTinOXAaxn4bV></div>
-    <br/>
-    <input type="submit" value="Enviar">
-  </form>
+  <form id="mi-form" action="#" method="POST" onsubmit="handleSubmit(event)">
+  <div class="g-recaptcha" data-sitekey=6LdCHCYsAAAAACuKyFDohsOr06WlTinOXAaxn4bV></div>
+  <br/>
+  <input type="submit" value="Enviar">
+</form>
 </body>
 </html>
