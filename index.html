@@ -5,9 +5,13 @@
   <title>Mapa Personalizado</title>
 
   <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRUQq2kEZsfrR_aYWdEWAbpzW-Fn5WoZU"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap"
+    async
+    defer
+  ></script>
 
-  <!-- Google reCAPTCHA -->
+  <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <script>
@@ -31,18 +35,14 @@
           const infowindow = new google.maps.InfoWindow({
             content: `<img src="${punto.image}" style="width:150px;">`
           });
-
-          marker.addListener('click', () => {
-            infowindow.open(map, marker);
-          });
+          marker.addListener('click', () => infowindow.open(map, marker));
         }
       });
     }
   </script>
 </head>
 
-<body onload="initMap()">
-
+<body>
   <h2>Mapa</h2>
   <div id="map" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
 
@@ -52,6 +52,5 @@
     <br/>
     <input type="submit" value="Enviar">
   </form>
-
 </body>
 </html>
